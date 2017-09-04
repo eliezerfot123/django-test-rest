@@ -1,0 +1,42 @@
+#Para agregar  por manage.python
+
+from posts.models import Post
+from posts.api.serializers import PostSerializer
+
+data = {
+    "title": "lo que quieras",
+    "content": "lo que quieras",
+    "publish": "fecha"
+    "slug": "loque quieras"
+}
+
+new_item = PostSerializer(data=data)
+if new_item.is_valid():
+    new_item.save()
+else:
+    print(new_item.errors)
+
+#Para actualizar o eliminar con python shell
+
+#actualizar
+from posts.models import Post
+from posts.api.serializers import PostSerializer
+
+data = {
+    "title": "lo que quieras",
+    "content": "lo que quieras",
+    "publish": "fecha"
+    "slug": "loque quieras"
+}
+
+#busco por id
+obj = Post.objects.get(id=3)
+
+new_item = PostSerializer(obj, data=data)
+if new_item.is_valid():
+    new_item.save()
+else:
+    print(new_item.errors)
+
+#eliminar
+obj.delete()
