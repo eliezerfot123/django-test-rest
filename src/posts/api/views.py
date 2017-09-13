@@ -1,4 +1,13 @@
 from django.db.models import Q
+
+from rest_framework.filters import (
+    SearchFilter,
+    OrderingFilter,
+)
+
+from .paginations import PostLimitOffsetPagination, PostPageNumberPagination
+
+
 from rest_framework.generics import (
     CreateAPIView,
     DestroyAPIView,
@@ -49,6 +58,7 @@ class PostDeleteAPIView(DestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
     lookup_field = 'slug'
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 class PostDetailAPIView(RetrieveAPIView):
     queryset_list = Post.objects.all()
@@ -59,6 +69,9 @@ class PostDetailAPIView(RetrieveAPIView):
 
 class PostListAPIView(ListAPIView):
     serializer_class = PostListSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['title', 'content', 'user__first_name']
+    pagination_class = PostPageNumberPagination #PageNumberPagination
 
     def get_queryset(self, *args, **kwargs):
         #queryset_list = super(PostListAPIView, self).get_queryset(*args, **kwargs)
